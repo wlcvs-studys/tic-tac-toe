@@ -7,37 +7,31 @@ export default function Board({ xIsNext, squares, onPlay }) {
       return;
     }
     const nextSquares = squares.slice();
-    if (xIsNext) {
-      nextSquares[i] = "X";
-    } else {
-      nextSquares[i] = "O";
-    }
+    nextSquares[i] = xIsNext ? "X" : "O";
     onPlay(nextSquares);
   }
 
-  const winner = calculateWinner(squares);
-  let status;
-  if (winner) {
-    status = "Winner: " + winner;
-  } else {
-    status = "Next player: " + (xIsNext ? "X" : "O");
-  }
+  const result = calculateWinner(squares);
+  const { winner, line } = result || { winner: null, line: [] };  
+
+  let status = winner
+  ? "Winner: " + winner
+  : "Next player: " + (xIsNext ? "X" : "O");
 
   const divs = [];
-
   for (let i = 0; i < 3; i++) {
     const items = [];
     for (let j = 0; j < 3; j++) {
       const index = i * 3 + j;
       items.push(
         <Square
+          style={line.includes(index) ? { backgroundColor: '#12de12' } : {}}
           key={index} 
           value={squares[index]} 
           onSquareClick={() => handleClick(index)}
         />
       );
-    }
-
+    } 
     divs.push(
       <div key={i} className="board-row">
         {items}
